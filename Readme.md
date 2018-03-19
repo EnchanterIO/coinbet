@@ -29,7 +29,7 @@ enum Coin {BTC, ETH, XRP}
 Bets can be submitted using the **bet function**:
 
 ```solidity
-function bet(uint _roundId, uint32 _predictedPriceCents) public payable returns (bool success) {
+function bet(uint _roundId, uint32 _predictedPriceDollarCents) public payable returns (bool success) {
 ```
 
 The transaction is validated and the value sent must be of the same amount of Wei as **Betting Round** defines.
@@ -40,13 +40,15 @@ If someone created a **Betting Round** on the XRP price with betting period fini
 
 # Todo
 
-| Task  | Description |
-| ------------- | ------------- |
-| Winner resolution | Contract needs to have defined logic for choosing the winner of the Betting Round. This is tricky as external data (Coin price at resolution timestamp) from one of the exchanges in advance agreed on, must be provided and be trustworthy. |
-| Tests  | Cover the whole contract with tests |
-| Web interface | A web interface should be developed to make creation of Betting Rounds and Bets easier. |
-| Deploy | The app should be deployed to a decentralised filesystem. |
-| Fee | Fee cut logic should be included in the contract that sends to Coinbet developers an in-advance specified percentage cut after each Betting Round resolution. |
+| Task  | Description | Status |
+| ------------- | ------------- | ------------- |
+| Winner resolution | Contract needs to have defined logic for choosing the winner(s) of the Betting Round. | :white_check_mark: |
+| Decentralized Winner Resolution | This is tricky as external data (Coin price at resolution timestamp) from one of the exchanges in advance agreed on, must be provided and be trustworthy. | :question: |
+| Store winners  | When the BetRound is closed, all winners should be stored in BetRound "winners" attribute in order to be retrievable later on via Web interface. | :question: |
+| Tests  | Cover the whole contract with tests | :question: |
+| Web interface | A web interface should be developed to make creation of Betting Rounds and Bets easier. | :question: |
+| Deploy | The app should be deployed to a decentralised filesystem. | :question: |
+| Fee | Fee cut logic should be included in the contract that sends to Coinbet developers an in-advance specified percentage cut after each Betting Round resolution. | :white_check_mark: |
 
 # Development collaboration
 
