@@ -66,6 +66,7 @@ contract Coinbet {
 
     address owner;
     BetRound[] public rounds;
+    uint[] public roundsIds;
 
     /**
      * Pointer between an address and rounds bets.
@@ -108,6 +109,8 @@ contract Coinbet {
         round.betAmount = _betAmount;
         round.organizer = msg.sender;
         round.isOpen = true;
+
+        roundsIds.push(roundId);
 
         if (_coin == uint8(Coin.BTC)) {
             round.coin = Coin.BTC;
@@ -231,8 +234,29 @@ contract Coinbet {
         return true;
     }
 
-    function getBalance() view public returns(uint balance) {
+    function getBalance() view public returns (uint balance) {
         return this.balance;
+    }
+
+    function getBetRound(uint _roundId) view public returns (
+        uint startTimestamp,
+        uint endTimestamp,
+        uint resolutionTimestamp,
+        uint betAmount,
+        uint8 coin
+    ) {
+        BetRound storage betRound = rounds[_roundId];
+
+        // BetRound was not found as the betAmount must be set and be greater than 0
+        assert(betRound.betAmount > 0);
+
+        return (
+            betRound.startTimestamp,
+            betRound.endTimestamp,
+            betRound.resolutionTimestamp,
+            betRound.betAmount,
+            uint8(betRound.coin)
+        );
     }
 
     function () public {
