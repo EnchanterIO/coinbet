@@ -5,4 +5,4 @@ All rights granted for distributing/editing/enhancing/deploying the project to m
 of transferring 1% of ETH, from all **BetRound**s (see code) that will be organized by the deployed contract, to 
 the public Ethereum address of GitHub user: "EnchanterIO". 
 
-To get the public address of user "EnchanterIO", get in touch with me personally.
+To get the public address of user GitHub user "EnchanterIO", get in touch with me personally.

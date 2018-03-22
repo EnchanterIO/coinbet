@@ -65,8 +65,8 @@ contract Coinbet {
     }
 
     address owner;
-    BetRound[] public rounds;
-    uint[] public roundsIds;
+    BetRound[] public betRounds;
+    uint[] public betRoundsIds;
 
     /**
      * Pointer between an address and rounds bets.
@@ -101,8 +101,8 @@ contract Coinbet {
         // Buy in must be higher than 0.01 ETH in Wei
         require(_betAmount > 10000000000000000);
 
-        roundId = rounds.length++;
-        BetRound storage round = rounds[roundId];
+        roundId = betRounds.length++;
+        BetRound storage round = betRounds[roundId];
         round.startTimestamp = _startTimestamp;
         round.endTimestamp = _endTimestamp;
         round.resolutionTimestamp = _resolutionTimestamp;
@@ -110,7 +110,7 @@ contract Coinbet {
         round.organizer = msg.sender;
         round.isOpen = true;
 
-        roundsIds.push(roundId);
+        betRoundsIds.push(roundId);
 
         if (_coin == uint8(Coin.BTC)) {
             round.coin = Coin.BTC;
@@ -137,7 +137,7 @@ contract Coinbet {
         uint _roundId,
         uint32 _finalBetRoundCoinPriceDollarCents
     ) public {
-        BetRound memory betRound = rounds[_roundId];
+        BetRound memory betRound = betRounds[_roundId];
 
         // BetRound was not found as the betAmount must be set and be greater than 0
         assert(betRound.betAmount > 0);
@@ -148,8 +148,8 @@ contract Coinbet {
         // Only contract owner can choose a winner for now @todo
         assert(msg.sender == owner);
         // There were no bets, closing BetRound without choosing the winner!
-        if (rounds[_roundId].bets.length == 0) {
-            rounds[_roundId].isOpen = false;
+        if (betRounds[_roundId].bets.length == 0) {
+            betRounds[_roundId].isOpen = false;
 
             return;
         }
@@ -192,7 +192,7 @@ contract Coinbet {
         uint userReward = betRoundPricePoolAfterFee / winnersCount;
 
         // Close the BetRound before transferring the user reward to prevent "re-entrancy"
-        rounds[_roundId].isOpen = false;
+        betRounds[_roundId].isOpen = false;
 
         // Transfer user rewards!
         for (uint wIndex = 0; wIndex < winners.length; wIndex++) {
@@ -210,7 +210,7 @@ contract Coinbet {
         uint _roundId,
         uint32 _predictedPriceDollarCents
     ) public payable returns (bool success) {
-        BetRound storage betRound = rounds[_roundId];
+        BetRound storage betRound = betRounds[_roundId];
 
         // BetRound was not found as the betAmount must be set and be greater than 0
         assert(betRound.betAmount > 0);
@@ -238,23 +238,31 @@ contract Coinbet {
         return this.balance;
     }
 
+    function getBetRoundsIds() view public returns (uint[]) {
+        return betRoundsIds;
+    }
+
     function getBetRound(uint _roundId) view public returns (
+        uint id,
         uint startTimestamp,
         uint endTimestamp,
         uint resolutionTimestamp,
         uint betAmount,
+        uint pricePool,
         uint8 coin
     ) {
-        BetRound storage betRound = rounds[_roundId];
+        BetRound storage betRound = betRounds[_roundId];
 
         // BetRound was not found as the betAmount must be set and be greater than 0
         assert(betRound.betAmount > 0);
 
         return (
+            _roundId,
             betRound.startTimestamp,
             betRound.endTimestamp,
             betRound.resolutionTimestamp,
             betRound.betAmount,
+            betRound.bets.length * betRound.betAmount,
             uint8(betRound.coin)
         );
     }
