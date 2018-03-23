@@ -46,7 +46,8 @@ If someone created a **Betting Round** on the XRP price with betting period fini
 | Decentralized Winner Resolution | This is tricky as external data (Coin price at resolution timestamp) from one of the exchanges in advance agreed on, must be provided and be trustworthy. | :question: |
 | Store winners  | When the BetRound is closed, all winners should be stored in BetRound "winners" attribute in order to be retrievable later on via Web interface. | :question: |
 | Tests  | Cover the whole contract with tests | :question: |
-| Web interface | A web interface should be developed to make creation of Betting Rounds and Bets easier. | :question: |
+| Web interface | A web interface should be developed to make creation of Betting Rounds and Bets easier. | :white_check_mark: |
+| Web bet | Add an option to bet on a bet round | :question: |
 | Deploy | The app should be deployed to a decentralised filesystem. | :question: |
 | Fee | Fee cut logic should be included in the contract that sends to Coinbet developers an in-advance specified percentage cut after each Betting Round resolution. | :white_check_mark: |
 

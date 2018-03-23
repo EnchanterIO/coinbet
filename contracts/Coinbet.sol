@@ -98,8 +98,8 @@ contract Coinbet {
         // highest chance of guessing the price
         require(_resolutionTimestamp > _endTimestamp + 7 days);
         require(_coin == uint8(Coin.BTC) || _coin == uint8(Coin.ETH) || _coin == uint8(Coin.XRP));
-        // Buy in must be higher than 0.01 ETH in Wei
-        require(_betAmount > 10000000000000000);
+        // Buy in must be at least 0.01 ETH in Wei
+        require(_betAmount >= 10000000000000000);
 
         roundId = betRounds.length++;
         BetRound storage round = betRounds[roundId];

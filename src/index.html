@@ -9,6 +9,7 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -18,10 +19,160 @@
     <![endif]-->
   </head>
   <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+          <h1 class="text-center">Coinbet</h1>
+          <hr/>
+            <p>
+              A decentralised smart contract application based on Ethereum
+              blockchain that enables people to bet against each other in pursuit,
+              competition of predicting token prices.
+            </p>
+          <hr/>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-12"><strong>Current UTC time: </strong><span id="current-utc-time"></span></div>
+      </div>
+
+      <br />
+
+      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+        Create bet round
+      </button>
+
+      <br />
+      <br />
+
+      <div id="bet-rounds" class="row">
+        <!-- BetRounds load here -->
+        <div class="col-xs-12 text-center">
+          <p class="bg-warning">Loading betting rounds from blockchain...</p>
+        </div>
+      </div>
+
+      <div id="bet-round-template" style="display: none;">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <div class="panel panel-default panel-pet">
+            <div class="panel-heading">
+              <h3>BetRound ID: <span class="panel-title bet-round-id"></span></h3>
+            </div>
+
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-sm-12 col-md-4 col-lg-4"><strong>Betting starts:</strong></div>
+                <div class="col-sm-12 col-md-8 col-lg-8"><span class="bet-start"></span></div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12 col-md-4 col-lg-4"><strong>Betting ends:</strong></div>
+                <div class="col-sm-12 col-md-8 col-lg-8"><span class="bet-end"></span></div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12 col-md-4 col-lg-4"><strong>Winners decided:</strong></div>
+                <div class="col-sm-12 col-md-8 col-lg-8"><span class="bet-resolution"></span></div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12 col-md-4 col-lg-4"><strong>Betting on coin:</strong></div>
+                <div class="col-sm-12 col-md-8 col-lg-8"><span class="bet-coin"></span></div>
+              </div>
+
+              <br />
+
+              <div class="row">
+                <div class="col-sm-12 col-md-4 col-lg-4"><strong>Buy-in:</strong></div>
+                <div class="col-sm-12 col-md-8 col-lg-8"><span class="bet-buyin"></span></div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12 col-md-4 col-lg-4"><strong>Winner reward:</strong></div>
+                <div class="col-sm-12 col-md-8 col-lg-8"><span class="bet-pricepool"></span></div>
+              </div>
+
+              <br/>
+
+              <button class="btn btn-success btn-bet" type="button">Bet</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Create your own betting round!</h4>
+          </div>
+          <div class="modal-body">
+              <form action="#" id="c-create-bet-round">
+                <div class="form-group">
+                  <label for="c-start-timestamp">Betting period starts at:</label>
+                  <input type="text" value="2018-04-15 15:15" class="form-control" id="c-start-timestamp">
+                </div>
+                <div class="form-group">
+                  <label for="c-end-timestamp">Betting period ends at:</label>
+                  <input type="text" value="2018-04-20 15:15" class="form-control" id="c-end-timestamp">
+                </div>
+                <div class="form-group">
+                  <label for="c-winner-timestamp">Winner decided at:</label>
+                  <p>
+                    Specify the time when the the algorithm should check the price of the coin
+                    in Kraken exchange in US dollars cents $.
+                  </p>
+                  <p>
+                    User with the closest coin price guess, will receive the price pool (all
+                    bets of users that lost the bet).
+                  </p>
+                  <p>
+                    This date must be at least 7 days after the end of the betting period.
+                  </p>
+                  <input type="text" value="2018-04-28 15:15" class="form-control" id="c-winner-timestamp">
+                </div>
+                <div class="form-group">
+                  <label for="c-buyin">Amount of ETH required for user to participate (to place a bet)</label>
+                  <p>
+                    Minimum amount is 0.01ETH
+                  </p>
+                  <input type="text" value="0.01" min="0.01" class="form-control" id="c-buyin">
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="c-coin" value="0">BTC</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="c-coin" value="1">ETH</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="c-coin" value="2">XRP</label>
+                </div>
+
+                <div class="alert alert-danger hide" id="c-error"></div>
+                <div class="alert alert-success hide" id="c-bet-round-success-container">
+                  <p>Betting Round ID: <strong id="c-bet-round-id"></strong></p>
+                  <p>Organizer: <strong id="c-bet-round-organizer"></strong></p>
+                  <p>Transaction hash: <strong id="c-bet-round-transaction-hash"></strong></p>
+                </div>
+
+                <br />
+
+                <button type="submit" id="c-submit-btn" class="btn btn-success">Create</button>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-datetimepicker.min.js"></script>
     <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
     <script src="js/app.js"></script>
